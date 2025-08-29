@@ -32,7 +32,8 @@ RULES = collections.OrderedDict([
 
     # --- Compound Vowels / Characters (High Priority) ---
     ('rri', 'ঋ'),
-    ('hR', 'হৃ'),  # ✅ Bengali হৃ
+    ('hRi', 'হৃ'),  # NEW: consume 'hRi' together so hRidoy -> হৃদয়
+    ('hR', 'হৃ'),   # Bengali হৃ
     ('rr', 'রি'),
     ('OU', 'ঔ'),
     # Capitalized 'oi' variants for কৈ. Lowercase 'oi' is intentionally omitted for কই.
@@ -83,7 +84,7 @@ CHAR_TYPES = {
     'oo': TYPE_INDEPENDENT_VOWEL, 'OU': TYPE_INDEPENDENT_VOWEL, 'OI': TYPE_INDEPENDENT_VOWEL,
     'Oi': TYPE_INDEPENDENT_VOWEL, 'oI': TYPE_INDEPENDENT_VOWEL,
     'RI': TYPE_VOWEL_DIACRITIC,
-    'hR': TYPE_COMPOUND, 'rr': TYPE_COMPOUND,
+    'hRi': TYPE_COMPOUND, 'hR': TYPE_COMPOUND, 'rr': TYPE_COMPOUND,
 }
 
 DIACRITICS = {
@@ -134,7 +135,6 @@ def transliterate_word(word):
                 current_state = STATE_CONSONANT
 
             elif char_type == TYPE_VOWEL_DIACRITIC:
-                # ✅ Allow diacritics even after hR (হৃ)
                 bengali_word += DIACRITICS[matched_key]
                 current_state = STATE_VOWEL
 
@@ -146,13 +146,9 @@ def transliterate_word(word):
                 current_state = STATE_VOWEL
 
             elif char_type == TYPE_COMPOUND:
-                if matched_key == 'hR':
-                    # ✅ Do not remove previous consonant (fix for হৃদয়/hRidoy)
-                    bengali_word += bengali_char
-                    current_state = STATE_VOWEL
-                else:
-                    bengali_word += bengali_char
-                    current_state = STATE_VOWEL
+                # For hRi/hR we just output the compound and treat as a vowel cluster result
+                bengali_word += bengali_char
+                current_state = STATE_VOWEL
 
             else:  # TYPE_CONSONANT
                 if current_state == STATE_CONSONANT:

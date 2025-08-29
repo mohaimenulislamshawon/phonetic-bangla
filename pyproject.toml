@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 name = "phonetic-bangla"
 version = "1.0.0"
 authors = [
-  { name="Your Name", email="you@example.com" },
+  { name="Mohaimenul Islam Shawon", email="mohaimenulislamshawon@gmail.com" },
 ]
 description = "An intelligent, rule-based phonetic transliterator from English to Bengali."
 readme = "README.md"
@@ -26,5 +26,5 @@ classifiers = [
 phonetic-bangla = "phoneticbn.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/your_username/phonetic-bangla-project"
-"Bug Tracker" = "https://github.com/your_username/phonetic-bangla-project/issues"
+Homepage = "https://github.com/mohaimenulislamshawon/phonetic-bangla"
+"Bug Tracker" = "https://github.com/mohaimenulislamshawon/phonetic-bangla/issues"

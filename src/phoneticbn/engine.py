@@ -23,7 +23,7 @@ RULES = collections.OrderedDict([
     # Juktoborno & Folas
     ('kSh', 'ক্ষ'), ('jNG', 'জ্ঞ'), ('rf', 'র্'), ('w', 'ব'), ('Z', 'য'),
     # High-Priority Compounds (THE FIX IS HERE)
-    ('hri', 'ഹൃ'), # <-- This rule will now be correctly chosen over 'h'
+    ('hri', 'হৃ'), # <-- This rule will now be correctly chosen over 'h'
     ('rri', 'ঋ'),
     ('rr', 'রি'),
     ('OU', 'ঔ'), ('OI', 'ঐ'), ('Oi', 'ঐ'), ('oI', 'ঐ'), ('ee', 'ঈ'), ('oo', 'ঊ'),

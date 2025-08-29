@@ -1,0 +1,30 @@
+# In: pyproject.toml
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phonetic-bangla"
+version = "1.0.0"
+authors = [
+  { name="Your Name", email="you@example.com" },
+]
+description = "An intelligent, rule-based phonetic transliterator from English to Bengali."
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Text Processing :: Linguistic",
+]
+
+[project.scripts]
+phonetic-bangla = "phoneticbn.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/your_username/phonetic-bangla-project"
+"Bug Tracker" = "https://github.com/your_username/phonetic-bangla-project/issues"

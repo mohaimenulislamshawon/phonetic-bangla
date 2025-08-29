@@ -16,14 +16,13 @@ TYPE_COMPOUND = 5
 TYPE_EXPLICIT_CONJUNCT = 6
 
 # --- The Phonetic Rule Set ---
-# With the new "longest match" engine, order is less critical, but this is still good practice.
 RULES = collections.OrderedDict([
     # Modifiers
     ('C', 'ঁ'), ('nN', 'ঁ'), (':', 'ঃ'), ('H', 'ঃ'), ('ng', 'ং'), ('`', 'ৎ'), ('+', '্'),
     # Juktoborno & Folas
     ('kSh', 'ক্ষ'), ('jNG', 'জ্ঞ'), ('rf', 'র্'), ('w', 'ব'), ('Z', 'য'),
     # High-Priority Compounds (THE FIX IS HERE)
-    ('hri', 'হৃ'), # <-- This rule will now be correctly chosen over 'h'
+    ('hri', 'হৃ'), # <-- This rule is now handled by a smarter engine
     ('rri', 'ঋ'),
     ('rr', 'রি'),
     ('OU', 'ঔ'), ('OI', 'ঐ'), ('Oi', 'ঐ'), ('oI', 'ঐ'), ('ee', 'ঈ'), ('oo', 'ঊ'),
@@ -57,6 +56,10 @@ CHAR_TYPES = {
 
 DIACRITICS = {'a':'া','A':'া','i':'ি','I':'ী','ee':'ী','u':'ু','U':'ূ','oo':'ূ','e':'ে','E':'ৈ','OI':'ৈ','Oi':'ৈ','oI':'ৈ','O':'ো','OU':'ৌ','RI':'ৃ','o':''}
 HOSONTO = "্"
+# --- LOOKAHEAD LOGIC ---
+# Define the English characters that start a consonant rule.
+# This helps decide if 'hri' is part of 'hridoy' or 'hritik'.
+CONSONANT_STARTERS = frozenset("kgcjTDNtdnpfbvmzrylSshRKGC")
 
 def transliterate_word(word):
     bengali_word = ""
@@ -64,23 +67,29 @@ def transliterate_word(word):
     word_len = len(word)
     current_state = STATE_START
     while i < word_len:
-        # --- CORE BUG FIX: THIS SECTION IS REWRITTEN ---
-        # It now finds the LONGEST valid match, not the first.
         longest_match_key = ''
         for key in RULES.keys():
             if word.startswith(key, i):
                 if len(key) > len(longest_match_key):
-                    char_type = CHAR_TYPES.get(key, TYPE_CONSONANT)
-                    is_valid = False
-                    if char_type in [TYPE_MODIFIER, TYPE_EXPLICIT_CONJUNCT]: is_valid = True
-                    elif current_state == STATE_START: is_valid = (char_type != TYPE_VOWEL_DIACRITIC)
-                    elif current_state == STATE_CONSONANT: is_valid = True
-                    elif current_state == STATE_VOWEL: is_valid = (char_type != TYPE_VOWEL_DIACRITIC)
-                    if is_valid:
-                        longest_match_key = key
+                    # --- SPECIAL LOOKAHEAD CHECK FOR 'hri' ---
+                    is_invalid_hri = False
+                    if key == 'hri':
+                        next_char_index = i + len(key)
+                        if next_char_index < word_len and word[next_char_index] in CONSONANT_STARTERS:
+                            is_invalid_hri = True # It's like 'hritik', so this rule is invalid here.
+                    
+                    if not is_invalid_hri:
+                        char_type = CHAR_TYPES.get(key, TYPE_CONSONANT)
+                        is_valid = False
+                        if char_type in [TYPE_MODIFIER, TYPE_EXPLICIT_CONJUNCT]: is_valid = True
+                        elif current_state == STATE_START: is_valid = (char_type != TYPE_VOWEL_DIACRITIC)
+                        elif current_state == STATE_CONSONANT: is_valid = True
+                        elif current_state == STATE_VOWEL: is_valid = (char_type != TYPE_VOWEL_DIACRITIC)
+                        
+                        if is_valid:
+                            longest_match_key = key
         
         matched_key = longest_match_key
-        # --- END OF CORE BUG FIX ---
 
         if matched_key:
             bengali_char = RULES[matched_key]

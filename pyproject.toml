@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "phonetic-bangla"
-version = "1.0.0"
+version = "1.0.2"
 authors = [
   { name="Mohaimenul Islam Shawon", email="mohaimenulislamshawon@gmail.com" },
 ]

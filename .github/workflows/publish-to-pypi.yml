@@ -9,6 +9,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    # --- THIS PERMISSIONS BLOCK IS THE FIX ---
+    permissions:
+      id-token: write # This is required for trusted publishing
+
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python
@@ -24,6 +29,5 @@ jobs:
 
     - name: Publish package to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      # The 'user' and 'password' fields are now removed.
+      # The action will automatically use trusted publishing.

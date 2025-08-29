@@ -10,7 +10,7 @@ version = "1.0.2"
 authors = [
   { name="Mohaimenul Islam Shawon", email="mohaimenulislamshawon@gmail.com" },
 ]
-description = "An intelligent, rule-based phonetic transliterator from English to Bengali."
+description = "An intelligent, rule-based phonetic transliterator from BanGlish to Bengali."
 readme = "README.md"
 license = { file="LICENSE" }
 requires-python = ">=3.7"

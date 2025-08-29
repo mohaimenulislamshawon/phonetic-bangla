@@ -1,3 +1,4 @@
+# In: src/phoneticbn/engine.py
 # -*- coding: utf-8 -*-
 import collections
 
@@ -24,15 +25,18 @@ RULES = collections.OrderedDict([
     ('`', 'ৎ'),
     ('+', '্'), # Explicit Hosonto
 
-    # --- Juktakkhor (Conjuncts) & Folas ---
+    # --- Juktoborno (Conjuncts) & Folas ---
     ('kSh', 'ক্ষ'), ('jNG', 'জ্ঞ'),
     ('rf', 'র্'), # Explicit Reph (e.g., dhorfmo -> ধর্ম)
     ('w', 'ব'),  # B-Fola (e.g., shwar -> স্বর)
     ('Z', 'য'),  # J-Fola (e.g., boZto -> ব্যস্ত)
 
     # --- Compound Vowels / Characters (High Priority) ---
+    # --- BUG FIX for hridoy ---
+    # The most intuitive input 'hri' is now explicitly mapped to 'ഹൃ'.
+    # This rule is checked before 'h' or 'r', solving the ambiguity.
+    ('hri', 'ഹൃ'),
     ('rri', 'ঋ'),
-    ('hR', 'ഹൃ'), # Specific, intuitive rule for 'ഹൃ'
     ('rr', 'রি'),
     ('OU', 'ঔ'),
     # Capitalized 'oi' variants for কৈ. Lowercase 'oi' is intentionally omitted for কই.
@@ -47,7 +51,7 @@ RULES = collections.OrderedDict([
     ('o', 'অ'), ('O', 'ও'),
 
     # --- Vowel Diacritics (Kar-chihno) ---
-    ('RI', 'ৃ'), # For all consonants other than 'h' (e.g., kRIpon -> কৃপণ)
+    ('RI', 'ৃ'), # For all other consonants (e.g., kRIpon -> কৃপণ)
 
     # --- Consonants (Aspirated) ---
     ('kh', 'খ'), ('gh', 'ঘ'),
@@ -83,7 +87,8 @@ CHAR_TYPES = {
     'oo': TYPE_INDEPENDENT_VOWEL, 'OU': TYPE_INDEPENDENT_VOWEL, 'OI': TYPE_INDEPENDENT_VOWEL,
     'Oi': TYPE_INDEPENDENT_VOWEL, 'oI': TYPE_INDEPENDENT_VOWEL,
     'RI': TYPE_VOWEL_DIACRITIC,
-    'hR': TYPE_COMPOUND, 'rr': TYPE_COMPOUND,
+    'hri': TYPE_COMPOUND, # --- BUG FIX ---
+    'rr': TYPE_COMPOUND,
 }
 
 DIACRITICS = {'a':'া','A':'া','i':'ি','I':'ী','ee':'ী','u':'ু','U':'ূ','oo':'ূ','e':'ে','E':'ৈ','OI':'ৈ','Oi':'ৈ','oI':'ৈ','O':'ো','OU':'ৌ','RI':'ৃ','o':''}
@@ -125,10 +130,8 @@ def transliterate_word(word):
                 else: bengali_word += bengali_char
                 current_state = STATE_VOWEL
             elif char_type == TYPE_COMPOUND:
-                if matched_key == 'hR' and current_state == STATE_CONSONANT:
-                    bengali_word = bengali_word[:-1]
                 bengali_word += bengali_char
-                current_state = STATE_CONSONANT if matched_key == 'hR' else STATE_VOWEL
+                current_state = STATE_CONSONANT if matched_key == 'hri' else STATE_VOWEL
             else: # TYPE_CONSONANT
                 if current_state == STATE_CONSONANT: bengali_word += HOSONTO + bengali_char
                 else: bengali_word += bengali_char

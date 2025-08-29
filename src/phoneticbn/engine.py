@@ -16,79 +16,43 @@ TYPE_COMPOUND = 5
 TYPE_EXPLICIT_CONJUNCT = 6
 
 # --- The Phonetic Rule Set ---
-# The order is CRITICAL. Longer, more specific rules must come first.
+# With the new "longest match" engine, order is less critical, but this is still good practice.
 RULES = collections.OrderedDict([
-    # --- Modifiers (Chandrabindu, Bisorgo, etc.) ---
-    ('C', 'ঁ'), ('nN', 'ঁ'),
-    (':', 'ঃ'), ('H', 'ঃ'),
-    ('ng', 'ং'), # Anusvara. For the consonant 'ঙ', use 'Ng'.
-    ('`', 'ৎ'),
-    ('+', '্'), # Explicit Hosonto
-
-    # --- Juktoborno (Conjuncts) & Folas ---
-    ('kSh', 'ক্ষ'), ('jNG', 'জ্ঞ'),
-    ('rf', 'র্'), # Explicit Reph (e.g., dhorfmo -> ধর্ম)
-    ('w', 'ব'),  # B-Fola (e.g., shwar -> স্বর)
-    ('Z', 'য'),  # J-Fola (e.g., boZto -> ব্যস্ত)
-
-    # --- Compound Vowels / Characters (High Priority) ---
-    # --- BUG FIX for hridoy ---
-    # The most intuitive input 'hri' is now explicitly mapped to 'ഹൃ'.
-    # This rule is checked before 'h' or 'r', solving the ambiguity.
-    ('hri', 'ഹൃ'),
+    # Modifiers
+    ('C', 'ঁ'), ('nN', 'ঁ'), (':', 'ঃ'), ('H', 'ঃ'), ('ng', 'ং'), ('`', 'ৎ'), ('+', '্'),
+    # Juktoborno & Folas
+    ('kSh', 'ক্ষ'), ('jNG', 'জ্ঞ'), ('rf', 'র্'), ('w', 'ব'), ('Z', 'য'),
+    # High-Priority Compounds (THE FIX IS HERE)
+    ('hri', 'ഹൃ'), # <-- This rule will now be correctly chosen over 'h'
     ('rri', 'ঋ'),
     ('rr', 'রি'),
-    ('OU', 'ঔ'),
-    # Capitalized 'oi' variants for কৈ. Lowercase 'oi' is intentionally omitted for কই.
-    ('OI', 'ঐ'), ('Oi', 'ঐ'), ('oI', 'ঐ'),
-    ('ee', 'ঈ'), ('oo', 'ঊ'),
-
-    # --- Independent Vowels ---
-    ('a', 'আ'), ('A', 'আ'),
-    ('i', 'ই'), ('I', 'ঈ'),
-    ('u', 'উ'), ('U', 'ঊ'),
-    ('e', 'এ'), ('E', 'ঐ'),
-    ('o', 'অ'), ('O', 'ও'),
-
-    # --- Vowel Diacritics (Kar-chihno) ---
-    ('RI', 'ৃ'), # For all other consonants (e.g., kRIpon -> কৃপণ)
-
-    # --- Consonants (Aspirated) ---
-    ('kh', 'খ'), ('gh', 'ঘ'),
-    ('ch', 'ছ'), ('jh', 'ঝ'),
-    ('Th', 'ঠ'), ('Dh', 'ঢ'),
-    ('th', 'থ'), ('dh', 'ধ'),
-    ('ph', 'ফ'), ('bh', 'ভ'),
-    ('sh', 'শ'), ('Sh', 'ষ'),
-    ('Rh', 'ঢ়'),
-
-    # --- Basic Consonants ---
-    ('k', 'ক'), ('g', 'গ'), ('Ng', 'ঙ'),
-    ('c', 'চ'), ('j', 'জ'), ('NG', 'ঞ'),
-    ('T', 'ট'), ('D', 'ড'), ('N', 'ণ'),
-    ('t', 'ত'), ('d', 'দ'), ('n', 'ন'),
-    ('p', 'প'), ('f', 'ফ'), ('b', 'ব'), ('v', 'ভ'), ('m', 'ম'),
-    ('z', 'য'),
-    ('y', 'য'), # Contextually changed to 'য়' inside the function
-    ('r', 'র'), ('l', 'ল'),
-    ('S', 'শ'), ('s', 'স'), ('h', 'হ'),
-    ('R', 'ড়'),
+    ('OU', 'ঔ'), ('OI', 'ঐ'), ('Oi', 'ঐ'), ('oI', 'ঐ'), ('ee', 'ঈ'), ('oo', 'ঊ'),
+    # Independent Vowels
+    ('a', 'আ'), ('A', 'আ'), ('i', 'ই'), ('I', 'ঈ'), ('u', 'উ'), ('U', 'ঊ'),
+    ('e', 'এ'), ('E', 'ঐ'), ('o', 'অ'), ('O', 'ও'),
+    # Vowel Diacritics
+    ('RI', 'ৃ'),
+    # Aspirated Consonants
+    ('kh', 'খ'), ('gh', 'ঘ'), ('ch', 'ছ'), ('jh', 'ঝ'), ('Th', 'ঠ'), ('Dh', 'ঢ'),
+    ('th', 'থ'), ('dh', 'ধ'), ('ph', 'ফ'), ('bh', 'ভ'), ('sh', 'শ'), ('Sh', 'ষ'), ('Rh', 'ঢ়'),
+    # Basic Consonants
+    ('k', 'ক'), ('g', 'গ'), ('Ng', 'ঙ'), ('c', 'চ'), ('j', 'জ'), ('NG', 'ঞ'),
+    ('T', 'ট'), ('D', 'ড'), ('N', 'ণ'), ('t', 'ত'), ('d', 'দ'), ('n', 'ন'),
+    ('p', 'প'), ('f', 'ফ'), ('b', 'ব'), ('v', 'ভ'), ('m', 'ম'), ('z', 'য'),
+    ('y', 'য'), ('r', 'র'), ('l', 'ল'), ('S', 'শ'), ('s', 'স'), ('h', 'হ'), ('R', 'ড়'),
 ])
 
-# Map rules to character types for the state machine
+# Map rules to character types
 CHAR_TYPES = {
-    'C': TYPE_MODIFIER, 'nN': TYPE_MODIFIER, ':': TYPE_MODIFIER, 'H': TYPE_MODIFIER,
-    'ng': TYPE_MODIFIER, '`': TYPE_MODIFIER, '+': TYPE_MODIFIER,
-    'rf': TYPE_EXPLICIT_CONJUNCT,
-    'rri': TYPE_INDEPENDENT_VOWEL, 'a': TYPE_INDEPENDENT_VOWEL, 'A': TYPE_INDEPENDENT_VOWEL,
-    'i': TYPE_INDEPENDENT_VOWEL, 'I': TYPE_INDEPENDENT_VOWEL, 'u': TYPE_INDEPENDENT_VOWEL,
-    'U': TYPE_INDEPENDENT_VOWEL, 'e': TYPE_INDEPENDENT_VOWEL, 'E': TYPE_INDEPENDENT_VOWEL,
-    'o': TYPE_INDEPENDENT_VOWEL, 'O': TYPE_INDEPENDENT_VOWEL, 'ee': TYPE_INDEPENDENT_VOWEL,
-    'oo': TYPE_INDEPENDENT_VOWEL, 'OU': TYPE_INDEPENDENT_VOWEL, 'OI': TYPE_INDEPENDENT_VOWEL,
-    'Oi': TYPE_INDEPENDENT_VOWEL, 'oI': TYPE_INDEPENDENT_VOWEL,
-    'RI': TYPE_VOWEL_DIACRITIC,
-    'hri': TYPE_COMPOUND, # --- BUG FIX ---
-    'rr': TYPE_COMPOUND,
+    'C': TYPE_MODIFIER, 'nN': TYPE_MODIFIER, ':': TYPE_MODIFIER, 'H': TYPE_MODIFIER, 'ng': TYPE_MODIFIER,
+    '`': TYPE_MODIFIER, '+': TYPE_MODIFIER, 'rf': TYPE_EXPLICIT_CONJUNCT, 'rri': TYPE_INDEPENDENT_VOWEL,
+    'a': TYPE_INDEPENDENT_VOWEL, 'A': TYPE_INDEPENDENT_VOWEL, 'i': TYPE_INDEPENDENT_VOWEL,
+    'I': TYPE_INDEPENDENT_VOWEL, 'u': TYPE_INDEPENDENT_VOWEL, 'U': TYPE_INDEPENDENT_VOWEL,
+    'e': TYPE_INDEPENDENT_VOWEL, 'E': TYPE_INDEPENDENT_VOWEL, 'o': TYPE_INDEPENDENT_VOWEL,
+    'O': TYPE_INDEPENDENT_VOWEL, 'ee': TYPE_INDEPENDENT_VOWEL, 'oo': TYPE_INDEPENDENT_VOWEL,
+    'OU': TYPE_INDEPENDENT_VOWEL, 'OI': TYPE_INDEPENDENT_VOWEL, 'Oi': TYPE_INDEPENDENT_VOWEL,
+    'oI': TYPE_INDEPENDENT_VOWEL, 'RI': TYPE_VOWEL_DIACRITIC,
+    'hri': TYPE_COMPOUND, 'rr': TYPE_COMPOUND,
 }
 
 DIACRITICS = {'a':'া','A':'া','i':'ি','I':'ী','ee':'ী','u':'ু','U':'ূ','oo':'ূ','e':'ে','E':'ৈ','OI':'ৈ','Oi':'ৈ','oI':'ৈ','O':'ো','OU':'ৌ','RI':'ৃ','o':''}
@@ -100,18 +64,24 @@ def transliterate_word(word):
     word_len = len(word)
     current_state = STATE_START
     while i < word_len:
-        matched_key = None
+        # --- CORE BUG FIX: THIS SECTION IS REWRITTEN ---
+        # It now finds the LONGEST valid match, not the first.
+        longest_match_key = ''
         for key in RULES.keys():
             if word.startswith(key, i):
-                char_type = CHAR_TYPES.get(key, TYPE_CONSONANT)
-                is_valid = False
-                if char_type in [TYPE_MODIFIER, TYPE_EXPLICIT_CONJUNCT]: is_valid = True
-                elif current_state == STATE_START: is_valid = (char_type != TYPE_VOWEL_DIACRITIC)
-                elif current_state == STATE_CONSONANT: is_valid = True
-                elif current_state == STATE_VOWEL: is_valid = (char_type != TYPE_VOWEL_DIACRITIC)
-                if is_valid:
-                    matched_key = key
-                    break
+                if len(key) > len(longest_match_key):
+                    char_type = CHAR_TYPES.get(key, TYPE_CONSONANT)
+                    is_valid = False
+                    if char_type in [TYPE_MODIFIER, TYPE_EXPLICIT_CONJUNCT]: is_valid = True
+                    elif current_state == STATE_START: is_valid = (char_type != TYPE_VOWEL_DIACRITIC)
+                    elif current_state == STATE_CONSONANT: is_valid = True
+                    elif current_state == STATE_VOWEL: is_valid = (char_type != TYPE_VOWEL_DIACRITIC)
+                    if is_valid:
+                        longest_match_key = key
+        
+        matched_key = longest_match_key
+        # --- END OF CORE BUG FIX ---
+
         if matched_key:
             bengali_char = RULES[matched_key]
             char_type = CHAR_TYPES.get(matched_key, TYPE_CONSONANT)

@@ -25,7 +25,7 @@ Install the package from PyPI with one simple command:
 
 ```bash
 pip install phonetic-bangla
-
+```
 ### 2. Usage in Python
 
 Import the easy-to-use `bn` function and start converting. It's that simple.
@@ -45,7 +45,7 @@ print(bengali_text)
 print(bn("sawgotom"))   # -> স্বাগতম
 print(bn("dhonyobad"))   # -> ধন্যবাদ
 print(bn("kormo"))      # -> কর্ম
-
+```
 ### 3. Usage from the Command Line
 
 You can also use the tool directly from your terminal for quick conversions.
@@ -53,7 +53,7 @@ You can also use the tool directly from your terminal for quick conversions.
 ```bash
 phonetic-bangla "sobar jonyo shubhechha"
 # Output: সবার জন্য শুভেচ্ছা
-
+```
 ## 📖 The Complete Phonetic Guide
 
 Master Bengali typing with this comprehensive cheat sheet. The engine is designed to be intuitive, but for perfect accuracy, use these specific rules for complex sounds.
@@ -73,7 +73,6 @@ Master Bengali typing with this comprehensive cheat sheet. The engine is designe
 |    ঐ/ৈ   |       `OI`, `E`       |     `OI`, `E`     | `bOI` -> বই              |
 |    ও/ো   |           `O`           |         `O`         | `bhalo` -> ভালো               |
 |    ঔ/ৌ   |          `OU`           |        `OU`         | `mOU` -> মৌ                   |
-| :-----: | :-------------------: | :-----------------: | ----------------------------- |
 
 ### Consonants (Banjonborno)
 
@@ -97,7 +96,6 @@ Master Bengali typing with this comprehensive cheat sheet. The engine is designe
 |    স    |   `s`   | `sokal`     |    হ    |   `h`   | `hat`      |
 |    ড়    |   `R`   | `paR`       |    ঢ়    |   `Rh`  | `aShaRh`   |
 |    য়    |   `y`   | `doya`      |    ৎ    |    `` ` ``   | `hoTa` + `` ` `` -> হঠাৎ |
-| :-----: | :-----: | ----------- | :-----: | :-----: | ---------- |
 
 ### Juktoborno (Conjuncts) & Folas
 
@@ -105,7 +103,7 @@ This is where `phonetic-bangla` shines. Type consonants one after another, and t
 
 | Desired Output   | Phonetic Input | Example Usage      | Notes                               |
 | :--------------: | :------------: | :----------------- | ----------------------------------- |
-| **হৃদয়** (Special) |   `hRidoy`     | `hRidoy` -> হৃদয়   | The only way to get **ഹൃ**.         |
+| **হৃদয়** (Special) |   `hRidoy`     | `hRidoy` -> হৃদয়   | The only way to get **হৃ**.         |
 |      **বিজ্ঞান**      |  `bijNGan`    | `bijNGan` -> বিজ্ঞান | For **জ্ঞ**, use `jNG`.              |
 |      **লক্ষী**      |   `lokShI`   | `lokShmi` -> লক্ষী | For **ক্ষ**, use `kSh`.                |
 |       **কর্ম**       |     `kormo`    | `kormo` -> কর্ম    | Use `rf` for explicit **রেফ (র্)**. |
@@ -113,7 +111,6 @@ This is where `phonetic-bangla` shines. Type consonants one after another, and t
 |       **স্বাগতম**      |    `swagotom`  | `swagotom` -> স্বাগতম | `w` after a consonant is **ব-ফলা**. |
 |       **শান্ত**       |    `shanto`    | `shanto` -> শান্ত  | `n` + `t` -> **ন্ত**.             |
 |       **অঙ্ক**       |     `oNgko`    | `oNgko` -> অঙ্ক    | `Ng` + `k` -> **ঙ্ক**.              |
-| :--------------: | :------------: | :----------------- | ----------------------------------- |
 
 ### Modifiers
 
@@ -123,10 +120,9 @@ This is where `phonetic-bangla` shines. Type consonants one after another, and t
 | **Anusvara**   |    ং    |    `ng`    | `rong` -> রং   |
 | **Bisorgo**    |    ঃ    |  `:` or `H` | `du:kho`, `duHkho` -> দুঃখ |
 | **Hosonto**    |    ্    |     `+`      | `shanto+` -> শান্ত্ |
-| :----------- | :-----: | :------: | :------------ |
+
 
 ## 🤝 Contributing
-
 This project is built for the community, and contributions are highly welcome! If you find a word that doesn't transliterate correctly or have an idea for a new rule, please get involved.
 
 1.  **Open an Issue**: The best way to start is by opening an issue on our [GitHub Issues](https://github.com/mohaimenulislamshawon/phonetic-bangla/issues) page. Describe the bug or feature request in detail.

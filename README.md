@@ -7,7 +7,7 @@
 
 **Tired of switching keyboards? Need to generate Bengali text programmatically in your Python project? This is the tool for you.**
 
-`phonetic-bangla` is an intelligent, rule-based phonetic transliterator that converts English (Roman) script to Bengali (Bangla). It's designed for developers, data scientists, and anyone who finds it cumbersome to use a traditional Bengali keyboard but needs accurate Bengali text. Just type Bengali words as they sound in English, and this library will handle the rest.
+`phonetic-bangla` is an intelligent, rule-based phonetic transliterator that converts English (Banglish) script to Bengali (Bangla). It's designed for developers, data scientists, and anyone who finds it cumbersome to use a traditional Bengali keyboard but needs accurate Bengali text. Just type Bengali words as they sound in English, and this library will handle the rest.
 
 ## 🌟 Why Use Phonetic-Bangla?
 

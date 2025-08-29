@@ -32,7 +32,7 @@ RULES = collections.OrderedDict([
 
     # --- Compound Vowels / Characters (High Priority) ---
     ('rri', 'ঋ'),
-    ('hR', 'হৃ'),  # ✅ Fixed: Bengali হৃ
+    ('hR', 'হৃ'),  # ✅ Bengali হৃ
     ('rr', 'রি'),
     ('OU', 'ঔ'),
     # Capitalized 'oi' variants for কৈ. Lowercase 'oi' is intentionally omitted for কই.
@@ -134,6 +134,7 @@ def transliterate_word(word):
                 current_state = STATE_CONSONANT
 
             elif char_type == TYPE_VOWEL_DIACRITIC:
+                # ✅ Allow diacritics even after hR (হৃ)
                 bengali_word += DIACRITICS[matched_key]
                 current_state = STATE_VOWEL
 
@@ -146,7 +147,7 @@ def transliterate_word(word):
 
             elif char_type == TYPE_COMPOUND:
                 if matched_key == 'hR':
-                    # ✅ Do not remove previous consonant (fix for হৃদয়)
+                    # ✅ Do not remove previous consonant (fix for হৃদয়/hRidoy)
                     bengali_word += bengali_char
                     current_state = STATE_VOWEL
                 else:

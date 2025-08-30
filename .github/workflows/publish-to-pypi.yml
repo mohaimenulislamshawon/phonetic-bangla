@@ -1,65 +1,33 @@
-# In: .github/workflows/publish-to-pypi.yml
-
-
-
 name: Publish Python Package to PyPI
 
-
-
 on:
-
-  release:
-
-    types: [published]
-
-
+  release:
+    types: [published]
 
 jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-  deploy:
+    # Permissions required for OIDC trusted publishing
+    permissions:
+      id-token: write
 
-    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
 
-    # --- THIS PERMISSIONS BLOCK IS THE FIX ---
+      - name: Build package
+        run: python -m build
 
-    permissions:
-
-      id-token: write # This is required for trusted publishing
-
-
-
-    steps:
-
-    - uses: actions/checkout@v3
-
-    - name: Set up Python
-
-      uses: actions/setup-python@v4
-
-      with:
-
-        python-version: '3.x'
-
-    - name: Install dependencies
-
-      run: |
-
-        python -m pip install --upgrade pip
-
-        pip install build
-
-    - name: Build package
-
-      run: python -m build
-
-
-
-    - name: Publish package to PyPI
-
-      uses: pypa/gh-action-pypi-publish@release/v1
-
-      # The 'user' and 'password' fields are now removed.
-
-      # The action will automatically use trusted publishing.
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
